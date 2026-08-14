@@ -1,0 +1,7 @@
+# dsh-plugin-deepseek-balance bundle patch: mounts the host row that serves
+# GET /dsh-balance. The browser half rides the package's `dsh.client`
+# declaration (scanned into window.__DSH_BOOT__ automatically), so no extra
+# client row is needed here.
+- insert:
+    - id: deepseek-balance
+      name: 'dsh-plugin-deepseek-balance'
