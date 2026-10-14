@@ -20,7 +20,7 @@ dsh plugin --profile web add <本插件文件夹的绝对路径>
 
 1. 把整个 `dsh-plugin-deepseek-balance` 文件夹复制到 `%USERPROFILE%\.dsh\profiles\node_modules\` 下
 2. 编辑 `%USERPROFILE%\.dsh\profiles\web\package.json`:
-   - `dependencies` 加入 `"dsh-plugin-deepseek-balance": "1.0.0"`
+   - `dependencies` 加入 `"dsh-plugin-deepseek-balance": "1.0.1"`
    - `dsh.profile.bundles` 数组追加 `"dsh-plugin-deepseek-balance"`
 3. 重启 `dsh web`,浏览器刷新页面
 
@@ -29,7 +29,19 @@ dsh plugin --profile web add <本插件文件夹的绝对路径>
 方式 A:`dsh plugin --profile web remove dsh-plugin-deepseek-balance`
 方式 B:手动删除上面登记的依赖、bundles 条目和 `node_modules` 里的文件夹,然后重启。
 
+## 兼容性维护
+
+DSH 启动时会用 `semver.satisfies(runtime, range, { includePrerelease: true })` 校验本插件
+`peerDependencies` 里的 `@deepseek-ai/dsh` / `@deepseek-ai/dsh-*`(`@deepseek-ai/cordis` 与
+`react` 不在校验范围内)。所以 DSH 升到新的次版本后,要把下面两项的区间改到新运行时版本,
+否则该行会被护栏停用并打印 "is incompatible with dsh ...":
+
+    "@deepseek-ai/dsh-credentials": "^<新运行时版本>"
+    "@deepseek-ai/dsh-launch-environment": "^<新运行时版本>"
+
+确需在旧声明下启用时,可用 `dsh plugin allow-version` 授予精确版本豁免。
+
 ## 要求
 
-- DSH web 0.1.0-rc.6(其他版本理论兼容,插槽名 `conversation.composer.dock` 需存在)
+- DSH web 0.2.1-alpha.2(其他版本理论兼容,插槽名 `conversation.composer.dock` 需存在)
 - 已配置 DeepSeek 官方 API key(设置 → 模型,或环境变量 `DEEPSEEK_API_KEY`)
